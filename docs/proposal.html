@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indus Script Research Proposal</title>
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --surface: #ffffff;
+    --text: #1f2328;
+    --muted: #5b6370;
+    --rule: #e3e0d8;
+    --accent: #8a4b14;
+    --accent-soft: #f6ece2;
+    --warn-bg: #fff7e0;
+    --warn-border: #e2b93b;
+    --code-bg: #f2f0ea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16181c;
+      --surface: #1d2025;
+      --text: #e6e6e3;
+      --muted: #a2a8b3;
+      --rule: #33373e;
+      --accent: #e0a066;
+      --accent-soft: #2a241e;
+      --warn-bg: #2b2616;
+      --warn-border: #a8862a;
+      --code-bg: #24272d;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 17px/1.65 Georgia, "Iowan Old Style", "Times New Roman", serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 96px; }
+  h1, h2, h3 { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.25; }
+  h1 { font-size: 1.9rem; margin: 0 0 8px; }
+  h2 { font-size: 1.35rem; margin: 56px 0 12px; padding-top: 16px; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.05rem; margin: 28px 0 8px; }
+  p, li { margin: 0 0 12px; }
+  ul, ol { padding-left: 24px; }
+  a { color: var(--accent); }
+  .byline { color: var(--muted); font-family: system-ui, sans-serif; font-size: 0.9rem; margin-bottom: 28px; }
+  .lead { font-size: 1.12rem; }
+  .title-box {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin: 20px 0;
+  }
+  .title-box strong { font-family: system-ui, sans-serif; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; }
+  .note {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    margin: 16px 0;
+  }
+  nav.toc {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.92rem;
+  }
+  nav.toc ol { margin: 8px 0 0; columns: 2; column-gap: 32px; }
+  nav.toc li { margin-bottom: 4px; break-inside: avoid; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.93rem; margin: 12px 0 20px; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--rule); }
+  th { font-family: system-ui, sans-serif; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  .table-wrap { overflow-x: auto; }
+  code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; font-size: 0.88em; }
+  /* pipeline diagram */
+  .pipeline { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin: 20px 0 8px; font-family: system-ui, sans-serif; }
+  .stage {
+    flex: 1 1 120px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+  .stage b { display: block; font-size: 0.92rem; margin-bottom: 2px; }
+  .stage.key { border: 2px solid var(--accent); background: var(--accent-soft); }
+  .arrow { align-self: center; color: var(--muted); font-size: 1.2rem; }
+  .caption { color: var(--muted); font-size: 0.9rem; font-family: system-ui, sans-serif; }
+  .refs li { font-size: 0.95rem; }
+  .tag { font-family: system-ui, sans-serif; font-size: 0.72rem; padding: 1px 6px; border-radius: 10px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
+  @media (max-width: 560px) {
+    nav.toc ol { columns: 1; }
+    .arrow { display: none; }
+    body { font-size: 16px; }
+  }
+  @media print {
+    body { background: #fff; color: #000; }
+    nav.toc { display: none; }
+    h2 { break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Research Proposal: LLM Agents for Indus Script Hypothesis Testing</h1>
+<div class="byline">M.Tech Computer Engineering · Semester research project · Draft of 17 October 2026</div>
+
+<div class="title-box">
+  <strong>Working title</strong>
+  Propose, Test, Reject: An LLM-Agent Framework for Falsifiable Hypothesis Testing on the Undeciphered Indus Script
+</div>
+
+<p class="lead">This project does not try to decipher the Indus script. It builds and evaluates a system in which LLM agents propose structural hypotheses about the script, and a statistical verifier accepts or rejects each one against the corpus. Example hypotheses: "sign X is a numeral", "sign Y marks the end of a word", "these two signs are variants of one sign".</p>
+
+<p>The framework is first checked on scripts that are already deciphered, with their known answers hidden. Only then is it applied to the Indus corpus. Expected contributions: (1) a reusable framework, (2) a benchmark of hidden-answer tests on known scripts, and (3) a ranked, reproducible list of Indus sign hypotheses that survive testing.</p>
+
+<nav class="toc" aria-label="Contents">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#motivation">Problem and motivation</a></li>
+    <li><a href="#related">Related work</a></li>
+    <li><a href="#gap">Gap, questions, contributions</a></li>
+    <li><a href="#method">Proposed method</a></li>
+    <li><a href="#data">Data and access</a></li>
+    <li><a href="#eval">Evaluation plan</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#risks">Risks and mitigations</a></li>
+    <li><a href="#venues">Where to publish</a></li>
+    <li><a href="#refs">Reading list</a></li>
+  </ol>
+</nav>
+
+<h2 id="motivation">1. Problem and motivation</h2>
+<p>The Indus script is one of the best-known undeciphered writing systems, and computational methods have so far settled little about it. More than 100 decipherment attempts have failed (<a href="https://scroll.in/latest/1077596/tamil-nadu-announces-1-million-prize-for-deciphering-indus-valley-civilisation-script">Scroll, 2025</a>).</p>
+<ul>
+  <li><b>No bilingual text.</b> There is nothing like the Rosetta Stone, and the underlying language is unknown.</li>
+  <li><b>Very short texts.</b> The ICIT corpus has about 5,509 texts and 19,616 sign occurrences, so a typical text is only a few signs long. Standard neural decipherment needs far more context than that.</li>
+  <li><b>Disputed status.</b> Researchers still disagree on whether the signs encode language at all. Rao et al. (2009) argued yes using entropy. Sproat (2014) applied related measures to more corpora and classified the Indus inscriptions as non-linguistic.</li>
+  <li><b>Why now.</b> On 5 January 2025, Tamil Nadu announced a USD 1 million prize for a decipherment and Rs 2 crore for a research chair named after Iravatham Mahadevan (<a href="https://www.deccanherald.com/amp/story/india%2Ftamil-nadu%2Fcm-stalin-announces-1-million-prize-for-decoding-indus-valley-script-3342165">Deccan Herald</a>). LLM agents now make it cheap to produce hypotheses in bulk, which creates a new risk: claims that sound plausible but are wrong.</li>
+</ul>
+<p>This project treats that risk as the research problem. LLMs can propose hypotheses, so the useful question becomes which hypotheses survive rigorous, pre-specified testing.</p>
+
+<h2 id="related">2. Related work</h2>
+
+<h3>Statistical analyses of the Indus script</h3>
+<ul>
+  <li><b>Rao et al. (2009, <i>Science</i>)</b> compared the script's conditional entropy with linguistic and non-linguistic systems and found it closer to language.</li>
+  <li><b>Sproat (2014, <i>Language</i>)</b> found that the earlier measures don't separate writing from non-writing when tested on a larger set of corpora. Using his own measures, he classified the Indus and Pictish symbols as non-linguistic. <b>Yadav, Jonathan and Ziman</b> published a rebuttal in <i>Language</i>.</li>
+  <li><b>Raghavendra (2026, arXiv 2608.02999)</b> builds a synthetic non-linguistic emblem system called SIGIL. The preprint reports that SIGIL passes the same statistical tests that are used as evidence for language in the Indus script. <span class="tag">read first</span> This matters directly to this project: the verifier cannot rely on those tests alone.</li>
+</ul>
+
+<h3>Neural decipherment of known scripts</h3>
+<ul>
+  <li><b>Luo, Cao and Barzilay (ACL 2019)</b> mapped Ugaritic and Linear B onto known related languages using sequence-to-sequence models trained as a minimum-cost flow problem. They report correctly translating 67.3% of Linear B cognates.</li>
+  <li><b>Luo, Hartmann, Santus, Barzilay and Cao (TACL 2021)</b> jointly modelled word segmentation and cognate alignment, using phonetic (IPA) priors. They tested on Gothic and Ugaritic and applied the method to undeciphered Iberian. Their code is public.</li>
+  <li><b>Limitation for Indus:</b> both methods assume a known related language. That assumption is exactly what is missing for the Indus script.</li>
+</ul>
+
+<h3>Machine learning on Indus images</h3>
+<ul>
+  <li><b>Palaniappan and Adhikari (2017, arXiv 1702.00523)</b> built a deep-learning pipeline that turns photos of inscriptions into standardised sign sequences.</li>
+  <li><b>"Deep Learning in Archiving Indus Script and Motif Information"</b> (<i>Journal of Computer Applications in Archaeology</i>) continues that line of work.</li>
+</ul>
+
+<h3>LLM agents</h3>
+<p>A search in October 2026 found no published work that applies LLM agents to testing hypotheses about the Indus script. <b>Repeat this search yourself</b> on Google Scholar, arXiv and the ACL Anthology before you claim novelty. Also look for general "AI scientist" and agentic hypothesis-generation papers, which give you the framing for this project.</p>
+
+<h2 id="gap">3. Gap, research questions, contributions</h2>
+<p><b>Gap:</b> Earlier work either tests one fixed hypothesis by hand (the entropy papers) or assumes a known related language (the neural decipherment papers). No existing system generates many candidate structural hypotheses and tests each one against controls with known answers.</p>
+<ol>
+  <li><b>RQ1:</b> On deciphered scripts with their answers hidden, what share of the hypotheses that LLM agents propose does the verifier correctly accept? This is precision, or the false-discovery rate.</li>
+  <li><b>RQ2:</b> How much does each component (verifier, critic, held-out split) reduce false discoveries compared with an LLM working alone?</li>
+  <li><b>RQ3:</b> Which Indus hypotheses survive the same pipeline, and how do they compare with what scholars already claim, for example that certain stroke signs are numerals?</li>
+</ol>
+<p><b>Contributions:</b> an open-source framework, a benchmark of hidden-answer tests, and a ranked list of Indus hypotheses with code to reproduce it.</p>
+
+<h2 id="method">4. Proposed method</h2>
+<div class="pipeline" role="img" aria-label="Pipeline: Proposer, Formalizer, Verifier, Critic, Ledger, with rejected hypotheses fed back to the Proposer">
+  <div class="stage"><b>1. Proposer</b>LLM reads corpus statistics and suggests hypotheses in plain language</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>2. Formalizer</b>Turns each hypothesis into an executable test (a Python predicate plus a test statistic)</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>3. Verifier</b>Runs the test on held-out data against null models, with multiple-comparison correction</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>4. Critic</b>LLM looks for confounds such as site, object type or sign frequency</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>5. Ledger</b>Logs every hypothesis, test and verdict; rejections go back to the Proposer</div>
+</div>
+<p class="caption">The verifier is the core contribution. It uses no LLM, so an accept or reject decision never depends on what an LLM merely finds convincing.</p>
+
+<h3>Hypothesis types (scoped to what short texts can support)</h3>
+<ul>
+  <li><b>Positional:</b> sign X occurs at the start or end of texts more often than chance.</li>
+  <li><b>Numerals:</b> stroke-like signs combine in ways that follow a counting system.</li>
+  <li><b>Allographs:</b> signs A and B appear in the same contexts, so they may be variants of one sign.</li>
+  <li><b>Segmentation:</b> a recurring sign pair or triple behaves like one unit, such as a word.</li>
+  <li><b>Context dependence:</b> a sign's frequency depends on the site, object type or period.</li>
+</ul>
+
+<h3>Verifier design (this is what reviewers will look at hardest)</h3>
+<ul>
+  <li><b>Split the corpus before starting.</b> The Proposer only sees the exploration split. Every test runs on a held-out confirmation split.</li>
+  <li><b>Null models:</b> shuffled corpora that keep sign frequencies, plus synthetic non-linguistic systems in the style of SIGIL.</li>
+  <li><b>Permutation tests,</b> with Benjamini–Hochberg correction across all hypotheses tested.</li>
+  <li><b>Pre-registration:</b> each test is fixed in the ledger before it runs, which blocks p-hacking.</li>
+  <li><b>Open-weight LLMs</b> (for example Llama or Qwen), so other researchers can reproduce the results.</li>
+</ul>
+
+<h2 id="data">5. Data and access</h2>
+<div class="note"><b>Do this in week 1.</b> If you can't get data, the project stalls. Send the access requests before you do anything else.</div>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Source</th><th>What it is</th><th>How to get it</th></tr></thead>
+  <tbody>
+    <tr><td><a href="https://wiki.digitalclassicist.org/Interactive_Corpus_of_Indus_Texts">ICIT</a> (Wells and Fuls)</td><td>4,537 objects, 5,509 texts, 19,616 sign occurrences</td><td>Request an account from Andreas Fuls (<a href="https://www.user.tu-berlin.de/fuls/Homepage/indus/menueindus.htm">TU Berlin page</a>). The original site was reported down in 2021, so email first.</td></tr>
+    <tr><td>Mahadevan (1977), <i>The Indus Script: Texts, Concordance and Tables</i></td><td>The classic concordance, with sign numbers used throughout the literature</td><td>University library, or archive.org. Check its licence before you redistribute any derived data.</td></tr>
+    <tr><td>Fuls, <i>Corpus of Indus Inscriptions</i> (Mathematica Epigraphica No. 3)</td><td>Printed listing cross-referenced with ICIT identifiers</td><td>Library or interlibrary loan</td></tr>
+    <tr><td>Control corpora</td><td>Deciphered scripts used for the hidden-answer tests: Linear B, Ugaritic and Gothic (the Luo et al. data), plus a SIGIL-style synthetic system</td><td>Public repositories from Luo et al. Generate the synthetic system yourself.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="eval">6. Evaluation plan</h2>
+<h3>Hidden-answer tests on deciphered scripts</h3>
+<ol>
+  <li>Take a deciphered corpus, replace every sign with an anonymous ID, and cut the texts to Indus-like lengths.</li>
+  <li>Run the full pipeline on it.</li>
+  <li>Score the accepted hypotheses against the known answers, for example which signs are numerals and where word dividers fall.</li>
+</ol>
+<p><b>Contamination check:</b> LLMs have read a lot about Linear B. Anonymising the signs and hiding the script's name is what keeps the test fair. Also check directly whether the model can recognise which script it is looking at.</p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Metric</th><th>What it shows</th></tr></thead>
+  <tbody>
+    <tr><td>Precision / false-discovery rate</td><td>How often an accepted hypothesis is actually true</td></tr>
+    <tr><td>Recall of known facts</td><td>How many of the planted ground-truth facts the system recovers</td></tr>
+    <tr><td>Accept rate on null corpora</td><td>Should be close to zero; checks that the verifier isn't fooled</td></tr>
+    <tr><td>Cost per accepted hypothesis</td><td>Tokens and runtime, which shows the approach is practical</td></tr>
+  </tbody>
+</table>
+</div>
+<p><b>Ablations:</b> LLM alone with no verifier; no critic; no held-out split; different LLM sizes.</p>
+<p><b>Indus results:</b> report the surviving hypotheses with effect sizes and compare them with claims already in the literature. Present them as candidates for experts to examine, never as decipherments.</p>
+
+<h2 id="timeline">7. Timeline (about 14 weeks)</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Weeks</th><th>Work</th><th>Deliverable</th></tr></thead>
+  <tbody>
+    <tr><td>1–2</td><td>Data requests, literature review, repeat the novelty search</td><td>Data in hand; 2-page literature review</td></tr>
+    <tr><td>3–4</td><td>Clean the corpus, compute baseline statistics, reproduce the Rao et al. entropy result</td><td>Baseline notebook</td></tr>
+    <tr><td>5–7</td><td>Build the verifier, null models and control corpora</td><td>Verifier tested on synthetic data</td></tr>
+    <tr><td>8–9</td><td>Add the Proposer, Formalizer and Critic agents, plus the ledger</td><td>End-to-end pipeline</td></tr>
+    <tr><td>10–11</td><td>Hidden-answer experiments and ablations</td><td>Results for RQ1 and RQ2</td></tr>
+    <tr><td>12</td><td>Run on the Indus corpus</td><td>Results for RQ3</td></tr>
+    <tr><td>13–14</td><td>Write the paper and thesis; release the code</td><td>Submission-ready draft</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="risks">8. Risks and mitigations</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+  <tbody>
+    <tr><td>Can't get ICIT access</td><td>Digitise a subset of the Mahadevan concordance. The control-script benchmark still makes a publishable paper on its own.</td></tr>
+    <tr><td>Statistical tests can't tell language from non-language (Sproat 2014; Raghavendra 2026)</td><td>Make this part of the design: every test also runs on non-linguistic null systems, and only hypotheses that separate from them count.</td></tr>
+    <tr><td>Texts too short for tests to detect real effects</td><td>Restrict to hypothesis types that suit short texts (positional, co-occurrence) and report statistical power</td></tr>
+    <tr><td>LLM has memorised the control scripts</td><td>Anonymise signs, hide script names, and run the contamination check</td></tr>
+    <tr><td>Overclaiming</td><td>Say in the abstract that this is not a decipherment; describe outputs as candidates for experts</td></tr>
+    <tr><td>API costs</td><td>Run open-weight models locally or on a college GPU; cache LLM calls</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="venues">9. Where to publish</h2>
+<ul>
+  <li><b><a href="https://www.aclweb.org/portal/content/1st-workshop-machine-learning-ancient-languages-ml4al-2024">ML4AL</a></b>, the Workshop on Machine Learning for Ancient Languages. Its first edition ran at ACL 2024. Check ml4al.com for upcoming editions and deadlines; I couldn't confirm a 2026 or 2027 edition. <span class="tag">best fit</span></li>
+  <li><b>LT4HALA</b>, a workshop on language technology for historical and ancient languages that has run alongside LREC. Check its current dates.</li>
+  <li><b><i>Journal of Computer Applications in Archaeology</i></b>, which is open access.</li>
+  <li><b><i>Digital Scholarship in the Humanities</i></b> (Oxford University Press).</li>
+  <li><b>Stretch goal:</b> Findings of ACL or EMNLP, framed around the general method (verifier-gated LLM hypothesis generation), with the Indus script as the case study.</li>
+  <li>Post an arXiv preprint when you submit, to establish when you did the work.</li>
+</ul>
+
+<h2 id="refs">10. Core reading list</h2>
+<ol class="refs">
+  <li>Raghavendra, N. (2026). <a href="https://arxiv.org/abs/2608.02999">On the Non-Specificity of Statistical Measures Used in Script Decipherment</a>. arXiv:2608.02999. <span class="tag">read first</span></li>
+  <li>Rao, R. P. N., Yadav, N., Vahia, M. N., Joglekar, H., Adhikari, R., &amp; Mahadevan, I. (2009). <a href="https://homes.cs.washington.edu/~rao/ScienceIndus.pdf">Entropic Evidence for Linguistic Structure in the Indus Script</a>. <i>Science</i>. doi:10.1126/science.1170391</li>
+  <li>Sproat, R. (2014). <a href="https://muse.jhu.edu/article/547119">A Statistical Comparison of Written Language and Nonlinguistic Symbol Systems</a>. <i>Language</i>, 90, 457–481.</li>
+  <li>Yadav, N., Jonathan, P., &amp; Ziman, J. <a href="https://resolve-he.cambridge.org/core/journals/language/article/on-statistical-measures-and-ancient-writing-systems/D75CB72F35D752E4848CA69AE8E32888">On Statistical Measures and Ancient Writing Systems</a>. <i>Language</i> (response to Sproat 2014).</li>
+  <li>Rao, R. et al. (2010). <a href="https://preview.aclanthology.org/moar-dois/J10-4016.pdf">Reply to Sproat</a>. <i>Computational Linguistics</i>, J10-4016.</li>
+  <li>Luo, J., Cao, Y., &amp; Barzilay, R. (2019). <a href="https://arxiv.org/abs/1906.06718">Neural Decipherment via Minimum-Cost Flow: From Ugaritic to Linear B</a>. ACL 2019, 3146–3155.</li>
+  <li>Luo, J., Hartmann, F., Santus, E., Barzilay, R., &amp; Cao, Y. (2021). <a href="https://aclanthology.org/2021.tacl-1.5">Deciphering Undersegmented Ancient Scripts Using Phonetic Prior</a>. <i>TACL</i>, 9, 69–81.</li>
+  <li>Palaniappan, S., &amp; Adhikari, R. (2017). <a href="https://arxiv.org/abs/1702.00523v1">Deep Learning the Indus Script</a>. arXiv:1702.00523.</li>
+  <li><a href="https://journal.caa-international.org/articles/10.5334/jcaa.175">Deep Learning in Archiving Indus Script and Motif Information</a>. <i>Journal of Computer Applications in Archaeology</i>.</li>
+  <li>Mahadevan, I. (1977). <i>The Indus Script: Texts, Concordance and Tables</i>. Memoirs of the Archaeological Survey of India, No. 77.</li>
+  <li>Wells, B. K., &amp; Fuls, A. <a href="https://wiki.digitalclassicist.org/Interactive_Corpus_of_Indus_Texts">Interactive Corpus of Indus Texts (ICIT)</a>.</li>
+</ol>
+<p class="caption">Every link above was found in October 2026. Items 1 and 9 were seen only in search results, so open them and confirm their details before you cite them. Item 10 is cited from memory.</p>
+
+</main>
+</body>
+</html>
